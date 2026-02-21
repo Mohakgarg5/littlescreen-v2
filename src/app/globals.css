@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+/* ── Warm, calm, eye-friendly palette ── */
+:root {
+  --bg: #F7F2EB;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #F0EBE2;
+  --border: #E8E1D6;
+  --border-soft: #EDE8DF;
+
+  --primary: #C07A4A;       /* warm terracotta */
+  --primary-hover: #A8633A;
+  --primary-light: #F3E3D3;
+
+  --secondary: #5E8F75;     /* sage green */
+  --secondary-light: #D8EDE3;
+
+  --accent: #E8B86D;        /* warm golden */
+  --accent-light: #FBF0D9;
+
+  --text: #2D1F0E;          /* rich warm brown */
+  --text-muted: #8A7060;
+  --text-soft: #B09A88;
+
+  --amazon: #C07A4A;
+  --youtube: #C0392B;
+  --blog: #5E8F75;
+  --netflix: #7B2D2D;
+  --spotify: #2D7A4A;
+  --pbs: #2D4A7A;
+  --book: #7A5C2D;
+  --app: #5C2D7A;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: #F7F2EB;
+  color: #2D1F0E;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #F0EBE2; }
+::-webkit-scrollbar-thumb { background: #D6CEC3; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #BEB5A9; }
+
+html { scroll-behavior: smooth; }
+
+.card-lift {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(45, 31, 14, 0.09);
+}
+
+/* Warm gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #C07A4A, #5E8F75);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Soft blob */
+@keyframes blob {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+}
+.animate-blob { animation: blob 10s ease-in-out infinite; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.4s ease forwards; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float { animation: float 3.5s ease-in-out infinite; }
+
+/* Shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #EDE8DF 25%, #E0D9CE 50%, #EDE8DF 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+
+/* Resource link hover */
+.resource-link {
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.resource-link:hover {
+  background: #F0EBE2;
+  border-color: #D6CEC3;
+}
