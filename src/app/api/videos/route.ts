@@ -28,11 +28,12 @@ export async function GET(request: NextRequest) {
     const data = await res.json();
 
     // Upstream returns { videos: [...] } or a plain array
-    const raw: unknown[] = Array.isArray(data) ? data : (Array.isArray(data?.videos) ? data.videos : []);
+    type RawVideo = { parentRating: number };
+    const raw: RawVideo[] = Array.isArray(data) ? data : (Array.isArray(data?.videos) ? data.videos : []);
 
     // Cap at 500 videos, sorted by parentRating desc (rated ones first)
     const sorted = raw
-      .sort((a: { parentRating: number }, b: { parentRating: number }) => b.parentRating - a.parentRating)
+      .sort((a, b) => b.parentRating - a.parentRating)
       .slice(0, MAX_VIDEOS);
 
     return NextResponse.json(sorted);
