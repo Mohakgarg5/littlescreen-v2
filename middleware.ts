@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/", "/login", "/signup"];
+const PUBLIC_PATHS = ["/login", "/signup"];
 const AUTH_ONLY_PATHS = ["/login", "/signup"]; // redirect away if already logged in
 const ONBOARDING_PATH = "/onboarding";
 
@@ -52,8 +52,6 @@ export function middleware(request: NextRequest) {
   if (!onboarded) {
     if (pathname === ONBOARDING_PATH) return NextResponse.next();
     if (AUTH_ONLY_PATHS.includes(pathname)) return NextResponse.redirect(new URL(ONBOARDING_PATH, request.url));
-    // Allow home page but redirect protected pages
-    if (PUBLIC_PATHS.includes(pathname)) return NextResponse.next();
     return NextResponse.redirect(new URL(ONBOARDING_PATH, request.url));
   }
 
