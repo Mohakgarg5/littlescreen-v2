@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 
 export default function LoginPage() {
-  const router = useRouter();
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +19,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      router.push("/");
+      window.location.href = "/";
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
