@@ -1,6 +1,6 @@
 "use client";
 
-import { ThumbsUp, Users, CheckCircle2, ExternalLink, Bookmark } from "lucide-react";
+import { ThumbsUp, CheckCircle2, ExternalLink, Bookmark } from "lucide-react";
 import { ContentItem } from "@/lib/data";
 
 interface ContentCardProps {
@@ -16,10 +16,29 @@ const PLATFORM_COLORS: Record<string, string> = {
   Spotify: "bg-green-50 text-green-600",
 };
 
+function getPlatformUrl(platform: string, title: string): string {
+  const q = encodeURIComponent(title);
+  switch (platform) {
+    case "YouTube":   return `https://www.youtube.com/results?search_query=${q}`;
+    case "Netflix":   return `https://www.netflix.com/search?q=${q}`;
+    case "PBS Kids":  return `https://pbskids.org/`;
+    case "Disney+":   return `https://www.disneyplus.com/search/${q}`;
+    case "Spotify":   return `https://open.spotify.com/search/${q}`;
+    default:          return `https://www.youtube.com/results?search_query=${q}`;
+  }
+}
+
 export default function ContentCard({ item, variant = "default" }: ContentCardProps) {
+  const url = getPlatformUrl(item.platform, item.title);
+
   if (variant === "compact") {
     return (
-      <div className="card-lift flex gap-3 p-3 rounded-xl bg-white border border-gray-100 shadow-sm hover:border-orange-200 cursor-pointer">
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="card-lift flex gap-3 p-3 rounded-xl bg-white border border-gray-100 shadow-sm hover:border-orange-200 cursor-pointer"
+      >
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-100 to-violet-100 flex items-center justify-center flex-shrink-0 text-2xl">
           {item.thumbnail}
         </div>
@@ -35,12 +54,17 @@ export default function ContentCard({ item, variant = "default" }: ContentCardPr
             </span>
           </div>
         </div>
-      </div>
+      </a>
     );
   }
 
   return (
-    <div className="card-lift group relative overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-orange-200 cursor-pointer">
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="card-lift group relative overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-orange-200 cursor-pointer"
+    >
       {/* Thumbnail */}
       <div className="relative h-36 bg-gradient-to-br from-orange-50 via-violet-50 to-blue-50 flex items-center justify-center overflow-hidden">
         <span className="text-6xl group-hover:scale-110 transition-transform duration-300">{item.thumbnail}</span>
@@ -102,12 +126,15 @@ export default function ContentCard({ item, variant = "default" }: ContentCardPr
             <button className="p-1.5 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-all">
               <Bookmark size={13} />
             </button>
-            <button className="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all">
+            <span
+              onClick={(e) => e.stopPropagation()}
+              className="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
+            >
               <ExternalLink size={13} />
-            </button>
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </a>
   );
 }
