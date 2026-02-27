@@ -154,14 +154,32 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Send personal check-in email to the parent on dashboard_check
-  if (trigger === "dashboard_check" && decoded.email) {
-    sendDashboardCheckEmail(
-      decoded.email,
-      decoded.name || "",
-      decoded.id,
-      supabase
-    ).catch(() => {}); // fire-and-forget, don't block the response
+    // Send personal check-in email to the parent on dashboard_check
+  if (trigger === "dashboard_check") {
+    const lsToken = request.cookies.get("ls_token")?.value;
+    (async () => {
+      try {
+        // JWT may not include email/name — fetch fresh from upstream
+        let email = decoded.email;
+        let name = decoded.name || "";
+        if (!email && lsToken) {
+          const me = await fetch("https://nuventionmedia.vercel.app/api/auth/me", {
+            headers: { Cookie: `token=${lsToken}` },
+            cache: "no-store",
+          });
+          if (me.ok) {
+            const data = await me.json();
+            email = data.user?.email || data.email;
+            name = data.user?.name || data.name || name;
+          }
+        }
+        if (email) {
+          await sendDashboardCheckEmail(email, name, decoded.id, supabase);
+        }
+      } catch {
+        // fire-and-forget — never block the response
+      }
+    })();
   }
 
   return NextResponse.json({ ok: true });
