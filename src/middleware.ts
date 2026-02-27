@@ -3,7 +3,7 @@ import { decodeToken } from "@/lib/auth";
 
 const AUTH_PATHS = ["/login", "/signup"];
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip Next.js internals and API routes
