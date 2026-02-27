@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search, SlidersHorizontal, CheckCircle2, TrendingUp, Sparkles, Play, ShieldCheck } from "lucide-react";
 import { MOMENTS, AGE_GROUPS, SAMPLE_PLAYLISTS, Moment, AgeGroup } from "@/lib/data";
@@ -13,7 +13,7 @@ import { useApprovedChannels } from "@/lib/ApprovedChannelsContext";
 
 type TabType = "videos" | "picks" | "playlists";
 
-export default function DiscoverPage() {
+function DiscoverContent() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<TabType>("videos");
   const [activeMoment, setActiveMoment] = useState<Moment | "all">("all");
@@ -450,5 +450,13 @@ export default function DiscoverPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DiscoverPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FEFAF5] flex items-center justify-center"><div className="text-gray-400 text-sm">Loading…</div></div>}>
+      <DiscoverContent />
+    </Suspense>
   );
 }
