@@ -4,6 +4,7 @@ import { MOMENTS, SAMPLE_PLAYLISTS } from "@/lib/data";
 import { COMMUNITY_POSTS } from "@/lib/community";
 import PlaylistCard from "@/components/PlaylistCard";
 import WhatWorkedCard from "@/components/WhatWorkedCard";
+import DashboardCheckTrigger from "@/components/DashboardCheckTrigger";
 
 const TRUST_STATS = [
   { value: "12,000+", label: "Parent Reviews",       icon: Users  },
@@ -39,6 +40,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#F7F2EB]">
+      <DashboardCheckTrigger />
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden pt-14 pb-20 px-4"

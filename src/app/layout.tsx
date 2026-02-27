@@ -3,6 +3,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import { FollowProvider } from "@/lib/FollowContext";
 import { AuthProvider } from "@/lib/AuthContext";
+import { ApprovedChannelsProvider } from "@/lib/ApprovedChannelsContext";
 
 export const metadata: Metadata = {
   title: "littleScreen — Built by parents, not by algorithms",
@@ -21,8 +22,10 @@ export default function RootLayout({
       <body className="antialiased min-h-screen">
         <AuthProvider>
           <FollowProvider>
-            <Navigation />
-            <main>{children}</main>
+            <ApprovedChannelsProvider>
+              <Navigation />
+              <main>{children}</main>
+            </ApprovedChannelsProvider>
           </FollowProvider>
         </AuthProvider>
       </body>

@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
-import { Menu, X, Search, BookOpen, Compass, Sparkles, Users, MessageCircleHeart, LogOut } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Menu, X, Search, BookOpen, Compass, Sparkles, Users, LogOut } from "lucide-react";
 import { useFollow } from "@/lib/FollowContext";
 import { useAuth } from "@/lib/AuthContext";
 
 const navLinks = [
   { href: "/discover",   label: "Discover",   icon: Compass },
   { href: "/playlists",  label: "Playlists",  icon: BookOpen },
-  { href: "/community",  label: "What Worked", icon: MessageCircleHeart },
   { href: "/parents",    label: "Parents",    icon: Users },
 ];
 
@@ -18,8 +17,24 @@ export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const { following } = useFollow();
   const { user, logout } = useAuth();
+
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/discover?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -72,9 +87,27 @@ export default function Navigation() {
 
           {/* Right */}
           <div className="hidden md:flex items-center gap-2.5">
-            <button className="p-2 text-[#8A7060] hover:text-[#C07A4A] hover:bg-[#F7F2EB] rounded-xl transition-all">
-              <Search size={17} />
-            </button>
+            {/* Expandable search */}
+            <form onSubmit={handleSearch} className="flex items-center gap-1">
+              {searchOpen && (
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onBlur={() => { if (!searchQuery) setSearchOpen(false); }}
+                  placeholder="Search videos..."
+                  className="w-44 px-3 py-1.5 text-sm bg-[#F7F2EB] border border-[#E8E1D6] rounded-xl focus:outline-none focus:border-[#C07A4A] transition-all"
+                />
+              )}
+              <button
+                type={searchOpen ? "submit" : "button"}
+                onClick={() => !searchOpen && setSearchOpen(true)}
+                className="p-2 text-[#8A7060] hover:text-[#C07A4A] hover:bg-[#F7F2EB] rounded-xl transition-all"
+              >
+                <Search size={17} />
+              </button>
+            </form>
             {user ? (
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2 bg-[#F7F2EB] border border-[#E8E1D6] px-3 py-1.5 rounded-xl">

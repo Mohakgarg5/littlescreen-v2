@@ -26,17 +26,18 @@ export async function POST(request: Request) {
     const tokenMatch = setCookieHeader.match(/(?:^|,\s*)token=([^;,\s]+)/);
     const token = tokenMatch?.[1];
 
-    const response = NextResponse.json({ user: data.user ?? data });
-
-    if (token) {
-      response.cookies.set("ls_token", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60,
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      });
+    if (!token) {
+      return NextResponse.json({ error: "Authentication failed — could not issue session" }, { status: 500 });
     }
+
+    const response = NextResponse.json({ user: data.user ?? data });
+    response.cookies.set("ls_token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60,
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+    });
 
     return response;
   } catch {

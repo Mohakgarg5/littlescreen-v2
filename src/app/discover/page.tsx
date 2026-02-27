@@ -1,26 +1,31 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Search, SlidersHorizontal, CheckCircle2, TrendingUp, Sparkles, Play } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Search, SlidersHorizontal, CheckCircle2, TrendingUp, Sparkles, Play, ShieldCheck } from "lucide-react";
 import { MOMENTS, AGE_GROUPS, SAMPLE_PLAYLISTS, Moment, AgeGroup } from "@/lib/data";
 import { fetchVideos, videoMatchesAge, Video } from "@/lib/videos";
 import VideoCard from "@/components/VideoCard";
 import VideoModal from "@/components/VideoModal";
 import ContentCard from "@/components/ContentCard";
 import PlaylistCard from "@/components/PlaylistCard";
+import { useApprovedChannels } from "@/lib/ApprovedChannelsContext";
 
 type TabType = "videos" | "picks" | "playlists";
 
 export default function DiscoverPage() {
+  const searchParams = useSearchParams();
   const [tab, setTab] = useState<TabType>("videos");
   const [activeMoment, setActiveMoment] = useState<Moment | "all">("all");
   const [activeAge, setActiveAge] = useState<AgeGroup>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [featuredVideo, setFeaturedVideo] = useState<Video | null>(null);
   const [featuredModalOpen, setFeaturedModalOpen] = useState(false);
+  const { isApproved } = useApprovedChannels();
 
   useEffect(() => {
     fetchVideos().then((data) => {
@@ -49,9 +54,10 @@ export default function DiscoverPage() {
         v.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         v.channelName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         v.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
-      return matchesMoment && matchesAge && matchesCat && matchesSearch;
+      const matchesVerified = !verifiedOnly || isApproved(v.channelName);
+      return matchesMoment && matchesAge && matchesCat && matchesSearch && matchesVerified;
     });
-  }, [videos, activeMoment, activeAge, activeCategory, searchQuery]);
+  }, [videos, activeMoment, activeAge, activeCategory, searchQuery, verifiedOnly, isApproved]);
 
   const filteredPlaylists = SAMPLE_PLAYLISTS.filter((pl) => {
     const matchesMoment = activeMoment === "all" || pl.moments.includes(activeMoment as Moment);
@@ -128,6 +134,18 @@ export default function DiscoverPage() {
                 {cat === "all" ? "All Categories" : cat}
               </button>
             ))}
+            {/* Verified channels toggle */}
+            <button
+              onClick={() => setVerifiedOnly((v) => !v)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+                verifiedOnly
+                  ? "bg-emerald-500 text-white border-emerald-500 shadow-sm"
+                  : "bg-white text-gray-500 border-gray-200 hover:border-emerald-300 hover:text-emerald-600"
+              }`}
+            >
+              <ShieldCheck size={12} />
+              Verified Channels
+            </button>
           </div>
         )}
       </div>

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Play, Star, Users, Bookmark, CheckCircle2 } from "lucide-react";
+import { Play, Star, Users, Bookmark, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Video } from "@/lib/videos";
 import { MOMENTS } from "@/lib/data";
 import VideoModal from "./VideoModal";
+import { useApprovedChannels } from "@/lib/ApprovedChannelsContext";
 
 interface VideoCardProps {
   video: Video;
@@ -14,6 +15,8 @@ interface VideoCardProps {
 export default function VideoCard({ video, variant = "default" }: VideoCardProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const { isApproved } = useApprovedChannels();
+  const channelApproved = isApproved(video.channelName);
 
   const primaryMoment = video.moments[0]
     ? MOMENTS.find((m) => m.id === video.moments[0])
@@ -196,7 +199,12 @@ export default function VideoCard({ video, variant = "default" }: VideoCardProps
           <h3 className="font-bold text-gray-900 text-sm leading-snug mb-1 line-clamp-2 group-hover:text-orange-600 transition-colors">
             {video.title}
           </h3>
-          <p className="text-gray-400 text-xs mb-2.5">{video.channelName}</p>
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <p className="text-gray-400 text-xs truncate">{video.channelName}</p>
+            {channelApproved && (
+              <span title="Parent-verified channel"><ShieldCheck size={12} className="text-emerald-500 flex-shrink-0" /></span>
+            )}
+          </div>
           <p className="text-gray-500 text-xs leading-relaxed mb-3 line-clamp-2">
             {video.description}
           </p>

@@ -33,17 +33,18 @@ export async function POST(request: Request) {
     const tokenMatch = setCookieHeader.match(/(?:^|,\s*)token=([^;,\s]+)/);
     const token = tokenMatch?.[1];
 
-    const response = NextResponse.json({ user: loginData.user ?? data.user });
-
-    if (token) {
-      response.cookies.set("ls_token", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60,
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      });
+    if (!token) {
+      return NextResponse.json({ error: "Account created but session could not be issued — please log in" }, { status: 500 });
     }
+
+    const response = NextResponse.json({ user: loginData.user ?? data.user });
+    response.cookies.set("ls_token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60,
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+    });
 
     return response;
   } catch {
