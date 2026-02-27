@@ -16,6 +16,15 @@ export interface Child {
   age: number;
 }
 
+export interface GroupMembership {
+  id: number;
+  group: {
+    id: number;
+    name: string;
+    icon: string;
+  };
+}
+
 export interface User {
   id: number;
   name: string;
@@ -24,6 +33,7 @@ export interface User {
   childName?: string;
   childAge?: number;
   children?: Child[];
+  groupMemberships?: GroupMembership[];
 }
 
 interface AuthContextType {
