@@ -4,7 +4,7 @@ import { decodeToken } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get("secret");
-  if (secret !== process.env.ADMIN_SECRET) {
+  if (secret !== (process.env.ADMIN_SECRET || "").trim()) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
