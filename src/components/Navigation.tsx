@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, Search, BookOpen, Compass, Sparkles, Users, LogOut } from "lucide-react";
+import { Menu, X, Search, BookOpen, Compass, Sparkles, Users, LogOut, ChevronDown, User } from "lucide-react";
 import { useFollow } from "@/lib/FollowContext";
 import { useAuth } from "@/lib/AuthContext";
 
@@ -19,6 +19,8 @@ export default function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { following } = useFollow();
   const { user, logout } = useAuth();
@@ -26,6 +28,16 @@ export default function Navigation() {
   useEffect(() => {
     if (searchOpen) searchInputRef.current?.focus();
   }, [searchOpen]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,22 +121,55 @@ export default function Navigation() {
               </button>
             </form>
             {user ? (
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-2 bg-[#F7F2EB] border border-[#E8E1D6] px-3 py-1.5 rounded-xl">
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => setProfileOpen((o) => !o)}
+                  className="flex items-center gap-2 bg-[#F7F2EB] border border-[#E8E1D6] hover:border-[#C07A4A]/40 px-3 py-1.5 rounded-xl transition-all"
+                >
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#C07A4A] to-[#5E8F75] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                     {userInitial}
                   </div>
                   <span className="text-sm font-medium text-[#4A3728] max-w-[100px] truncate">
                     {user.name}
                   </span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  title="Sign out"
-                  className="p-2 text-[#8A7060] hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                >
-                  <LogOut size={16} />
+                  <ChevronDown size={13} className={`text-[#8A7060] transition-transform ${profileOpen ? "rotate-180" : ""}`} />
                 </button>
+
+                {profileOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-[#E8E1D6] shadow-xl overflow-hidden z-50">
+                    {/* Identity */}
+                    <div className="px-4 py-3 border-b border-[#F3EDE4]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C07A4A] to-[#5E8F75] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                          {userInitial}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-[#2D1F0E] truncate">{user.name}</p>
+                          <p className="text-xs text-[#8A7060] truncate">{user.email}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="p-1.5">
+                      <Link
+                        href="/profile"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-[#4A3728] hover:bg-[#F7F2EB] transition-colors"
+                      >
+                        <User size={14} className="text-[#8A7060]" />
+                        Edit profile
+                      </Link>
+                      <button
+                        onClick={() => { setProfileOpen(false); handleLogout(); }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut size={14} />
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <>
