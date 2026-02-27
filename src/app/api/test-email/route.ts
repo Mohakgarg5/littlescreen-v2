@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
   if (finalEmail) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const result = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL!,
+      from: `littleScreen <${process.env.RESEND_FROM_EMAIL}>`,
       to: finalEmail,
       subject: "littleScreen test email",
       html: `<p>Hello ${finalName || finalEmail}! This is a test from littleScreen. If you got this, email is working ✅</p>`,

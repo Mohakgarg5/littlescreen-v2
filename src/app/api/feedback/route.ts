@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { after } from "next/server";
 import { Resend } from "resend";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { decodeToken } from "@/lib/auth";
@@ -105,7 +106,7 @@ async function sendDashboardCheckEmail(
 
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL!,
+    from: `littleScreen <${process.env.RESEND_FROM_EMAIL}>`,
     to: email,
     subject: `Hey ${firstName}, how's screen time going? 📺`,
     html,
@@ -155,13 +156,17 @@ export async function POST(request: NextRequest) {
   }
 
     // Send personal check-in email to the parent on dashboard_check
+  // Uses after() so Vercel keeps the function alive after the response is sent
   if (trigger === "dashboard_check") {
     const lsToken = request.cookies.get("ls_token")?.value;
-    (async () => {
+    const emailFromJwt = decoded.email;
+    const nameFromJwt = decoded.name || "";
+    const userId = decoded.id;
+
+    after(async () => {
       try {
-        // JWT may not include email/name — fetch fresh from upstream
-        let email = decoded.email;
-        let name = decoded.name || "";
+        let email = emailFromJwt;
+        let name = nameFromJwt;
         if (!email && lsToken) {
           const me = await fetch("https://nuventionmedia.vercel.app/api/auth/me", {
             headers: { Cookie: `token=${lsToken}` },
@@ -174,12 +179,12 @@ export async function POST(request: NextRequest) {
           }
         }
         if (email) {
-          await sendDashboardCheckEmail(email, name, decoded.id, supabase);
+          await sendDashboardCheckEmail(email, name, userId, supabase);
         }
       } catch {
-        // fire-and-forget — never block the response
+        // never let email errors surface to the user
       }
-    })();
+    });
   }
 
   return NextResponse.json({ ok: true });
