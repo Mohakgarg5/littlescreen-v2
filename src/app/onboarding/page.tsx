@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { Plus, Trash2, ArrowRight, ArrowLeft, Loader2, Check, Calendar } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 
@@ -220,7 +219,6 @@ function StepConcerns({
 
 // ── Main onboarding page ──
 export default function OnboardingPage() {
-  const router = useRouter();
   const { refreshUser } = useAuth();
   const [step, setStep] = useState(0);
   const [childForms, setChildForms] = useState<ChildForm[]>([
@@ -259,7 +257,7 @@ export default function OnboardingPage() {
           : Promise.resolve(),
       ]);
       await refreshUser();
-      router.push("/");
+      window.location.href = "/";
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
