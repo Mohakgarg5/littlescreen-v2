@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Bookmark, CheckCircle2, Share2, Users, Clock, Tag, ShoppingCart, ExternalLink } from "lucide-react";
+import { ArrowLeft, Bookmark, CheckCircle2, Share2, Users, Clock, Tag } from "lucide-react";
 import { SAMPLE_PLAYLISTS, PARENT_PICKS, MOMENTS } from "@/lib/data";
 import ContentCard from "@/components/ContentCard";
 import PlaylistCard from "@/components/PlaylistCard";
@@ -156,34 +156,6 @@ export default async function PlaylistDetailPage({ params }: Props) {
             <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 mb-12">
               <div className="text-4xl mb-3">📭</div>
               <p className="text-gray-500 text-sm">No videos yet — be the first to add one!</p>
-            </div>
-          )}
-
-          {samplePlaylist.amazonLinks && samplePlaylist.amazonLinks.length > 0 && (
-            <div className="mb-12">
-              <div className="flex items-center gap-2 mb-4">
-                <ShoppingCart size={18} className="text-[#C07A4A]" />
-                <h2 className="font-black text-xl text-gray-900">Parents Also Buy</h2>
-                <span className="text-xs text-gray-400 ml-1">Handpicked by our community</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {samplePlaylist.amazonLinks.map((item, i) => (
-                  <a key={i} href={item.url} target="_blank" rel="noopener noreferrer"
-                    className="group flex gap-3 p-4 bg-white rounded-2xl border border-[#E8E1D6] hover:border-[#C07A4A]/40 hover:shadow-md transition-all">
-                    <div className="w-10 h-10 rounded-xl bg-[#FEF3E8] flex items-center justify-center flex-shrink-0">
-                      <ShoppingCart size={18} className="text-[#C07A4A]" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-[#2D1F0E] leading-snug mb-1 group-hover:text-[#C07A4A] transition-colors line-clamp-2">{item.title}</p>
-                      <p className="text-xs text-[#8A7060] line-clamp-1 mb-2">{item.note}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-[#C07A4A]">{item.price}</span>
-                        <span className="flex items-center gap-1 text-xs text-[#B09A88] group-hover:text-[#C07A4A] transition-colors">Amazon <ExternalLink size={10} /></span>
-                      </div>
-                    </div>
-                  </a>
-                ))}
-              </div>
             </div>
           )}
 

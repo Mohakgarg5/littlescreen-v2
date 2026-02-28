@@ -116,7 +116,7 @@ export default function VideoCard({ video, variant = "default" }: VideoCardProps
                 {video.title}
               </h3>
               <button
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); setModalOpen(true); }}
                 className="p-1 text-gray-300 hover:text-orange-400 transition-colors flex-shrink-0"
               >
                 <Bookmark size={14} />
