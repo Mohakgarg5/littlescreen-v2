@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Bookmark, CheckCircle2, Share2, Users, Clock, Tag } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Share2, Users, Clock, Tag } from "lucide-react";
 import { SAMPLE_PLAYLISTS, PARENT_PICKS, MOMENTS } from "@/lib/data";
 import ContentCard from "@/components/ContentCard";
 import PlaylistCard from "@/components/PlaylistCard";
 import PlaylistItemsList from "@/components/PlaylistItemsList";
+import SavePlaylistButton from "@/components/SavePlaylistButton";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -120,9 +121,7 @@ export default async function PlaylistDetailPage({ params }: Props) {
               </div>
             </div>
             <div className="flex flex-wrap gap-3 mt-6">
-              <button className="flex items-center gap-2 bg-white text-gray-800 font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-50 transition-colors shadow-md text-sm">
-                <Bookmark size={15} /> Save Playlist
-              </button>
+              <SavePlaylistButton initialSaves={samplePlaylist.saves} />
               <button className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm">
                 <Share2 size={15} /> Share
               </button>
