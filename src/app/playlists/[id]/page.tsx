@@ -74,9 +74,11 @@ export default async function PlaylistDetailPage({ params }: Props) {
   const samplePlaylist = SAMPLE_PLAYLISTS.find((p) => p.id === id);
 
   if (samplePlaylist) {
-    const relatedContent = PARENT_PICKS.filter((item) =>
-      item.moments.some((m) => samplePlaylist.moments.includes(m))
-    );
+    const relatedContent = samplePlaylist.items && samplePlaylist.items.length > 0
+      ? samplePlaylist.items
+      : PARENT_PICKS.filter((item) =>
+          item.moments.some((m) => samplePlaylist.moments.includes(m))
+        );
     const momentData = samplePlaylist.moments
       .map((m) => MOMENTS.find((x) => x.id === m))
       .filter(Boolean);
@@ -146,7 +148,7 @@ export default async function PlaylistDetailPage({ params }: Props) {
         {/* Content */}
         <div className="max-w-4xl mx-auto px-4 py-8">
           <h2 className="font-black text-xl text-gray-900 mb-1">Videos in this playlist</h2>
-          <p className="text-sm text-gray-500 mb-6">These are the parent-picks tagged for {samplePlaylist.moments.join(", ")}</p>
+          <p className="text-sm text-gray-500 mb-6">{relatedContent.length} parent-verified YouTube video{relatedContent.length !== 1 ? "s" : ""} · click any to watch embedded</p>
           {relatedContent.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
               {relatedContent.map((item) => <ContentCard key={item.id} item={item} />)}

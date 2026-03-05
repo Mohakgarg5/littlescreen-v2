@@ -170,7 +170,7 @@ function DiscoverContent() {
                     ? "Loading parent-verified videos..."
                     : `${filteredVideos.length} parent-verified videos`
                   : tab === "picks"
-                  ? "6 curated parent picks"
+                  ? "6 YouTube parent picks"
                   : `${filteredPlaylists.length} playlists`}
                 {activeMoment !== "all" && activeMomentData && (
                   <span> · {activeMomentData.emoji} {activeMomentData.label}</span>
@@ -369,11 +369,11 @@ function DiscoverContent() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {[
-                { emoji: "🐕", title: "Bluey — Best Calm Episodes", platform: "Disney+", rating: 4.8, reviews: 1923, worked: 97, age: "3-6", cat: "Social Skills" },
-                { emoji: "🌙", title: "CoComelon Bedtime Songs Only", platform: "YouTube", rating: 4.2, reviews: 3201, worked: 81, age: "1-2", cat: "Calming" },
-                { emoji: "🧘", title: "Cosmic Kids Yoga", platform: "YouTube", rating: 4.7, reviews: 1567, worked: 89, age: "2-5", cat: "Motor Skills" },
-                { emoji: "🐯", title: "Daniel Tiger's Neighborhood", platform: "PBS Kids", rating: 4.8, reviews: 2134, worked: 93, age: "2-5", cat: "Social Skills" },
-                { emoji: "🔢", title: "Numberblocks", platform: "Netflix", rating: 4.9, reviews: 1342, worked: 96, age: "2-5", cat: "Educational" },
+                { emoji: "🌙", title: "CoComelon Bedtime Songs Only", rating: 4.2, reviews: 3201, worked: 81, age: "1-2", cat: "Calming" },
+                { emoji: "🧘", title: "Cosmic Kids Yoga", rating: 4.7, reviews: 1567, worked: 89, age: "2-5", cat: "Movement" },
+                { emoji: "🦈", title: "Baby Shark Dance | Pinkfong", rating: 4.5, reviews: 5120, worked: 92, age: "1-3", cat: "Active" },
+                { emoji: "🔤", title: "ABC Song | Super Simple Songs", rating: 4.7, reviews: 2100, worked: 90, age: "2-4", cat: "Educational" },
+                { emoji: "💃", title: "GoNoodle Movement & Dance", rating: 4.7, reviews: 1450, worked: 91, age: "2-6", cat: "Movement" },
               ].map((item) => (
                 <div key={item.title} className="card-lift bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:border-orange-200">
                   <div className="flex items-center gap-3 mb-3">
@@ -382,7 +382,7 @@ function DiscoverContent() {
                     </div>
                     <div>
                       <span className="text-xs bg-blue-50 text-blue-600 font-medium px-2 py-0.5 rounded-full">{item.cat}</span>
-                      <p className="text-xs text-gray-400 mt-0.5">{item.platform} · Ages {item.age}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">YouTube · Ages {item.age}</p>
                     </div>
                   </div>
                   <h3 className="font-bold text-gray-900 text-sm mb-2">{item.title}</h3>
