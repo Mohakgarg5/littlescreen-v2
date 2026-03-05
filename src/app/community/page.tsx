@@ -35,7 +35,9 @@ function dbPostToCard(p: DbPost) {
     moment: (p.moment as Moment) || ("calm" as Moment),
     title: p.title,
     body: p.body,
-    resources: (p.resources || []).map((r) => ({ ...r, type: r.type as ResourceType })),
+    resources: (p.resources || [])
+      .filter((r) => r.type === "youtube")
+      .map((r) => ({ ...r, type: "youtube" as ResourceType })),
     likes: p.likes,
     saves: p.saves,
     createdAt: p.created_at,

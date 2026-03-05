@@ -113,13 +113,13 @@ export default function WhatWorkedCard({ post }: WhatWorkedCardProps) {
               </span>
             </div>
             <div className="space-y-2">
-              {post.resources.map((resource, i) => {
+              {post.resources.filter((r) => r.youtubeId).map((resource, i) => {
                 const meta = RESOURCE_META[resource.type];
                 return (
                   <div key={i}>
                     <button
                       onClick={() =>
-                        setVideoModal({ youtubeId: resource.youtubeId, title: resource.title })
+                        setVideoModal({ youtubeId: resource.youtubeId!, title: resource.title })
                       }
                       className="resource-link w-full flex items-center gap-3 px-4 py-3 bg-[#F7F2EB] rounded-xl border border-[#E8E1D6] hover:border-[#C07A4A]/40 text-left"
                     >

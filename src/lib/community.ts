@@ -6,7 +6,7 @@ export interface LinkedResource {
   type: ResourceType;
   title: string;
   url: string;
-  youtubeId: string;
+  youtubeId?: string;
   note?: string;
 }
 
