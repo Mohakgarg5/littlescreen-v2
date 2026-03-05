@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Bookmark, Flag, ExternalLink, Play, ChevronDown, ChevronUp } from "lucide-react";
+import { Heart, Bookmark, Flag, Play, ChevronDown, ChevronUp } from "lucide-react";
 import { WhatWorkedPost, RESOURCE_META } from "@/lib/community";
 import { MOMENTS } from "@/lib/data";
 import VideoModal from "./VideoModal";
@@ -115,68 +115,33 @@ export default function WhatWorkedCard({ post }: WhatWorkedCardProps) {
             <div className="space-y-2">
               {post.resources.map((resource, i) => {
                 const meta = RESOURCE_META[resource.type];
-                const isYouTube = resource.type === "youtube" && resource.youtubeId;
-
                 return (
-                  <div key={i} className="group">
-                    {isYouTube ? (
-                      <button
-                        onClick={() =>
-                          setVideoModal({ youtubeId: resource.youtubeId!, title: resource.title })
-                        }
-                        className="resource-link w-full flex items-center gap-3 px-4 py-3 bg-[#F7F2EB] rounded-xl border border-[#E8E1D6] hover:border-[#C07A4A]/40 text-left"
+                  <div key={i}>
+                    <button
+                      onClick={() =>
+                        setVideoModal({ youtubeId: resource.youtubeId, title: resource.title })
+                      }
+                      className="resource-link w-full flex items-center gap-3 px-4 py-3 bg-[#F7F2EB] rounded-xl border border-[#E8E1D6] hover:border-[#C07A4A]/40 text-left"
+                    >
+                      <span
+                        className="flex-shrink-0 text-xs font-bold px-2.5 py-1 rounded-lg"
+                        style={{ backgroundColor: meta.bg, color: meta.color }}
                       >
-                        <span
-                          className="flex-shrink-0 text-xs font-bold px-2.5 py-1 rounded-lg"
-                          style={{ backgroundColor: meta.bg, color: meta.color }}
-                        >
-                          {meta.label.toUpperCase()}
+                        {meta.label.toUpperCase()}
+                      </span>
+                      <span className="flex-1 text-sm font-medium text-[#2D1F0E] line-clamp-1">
+                        {resource.title}
+                      </span>
+                      {resource.note && (
+                        <span className="hidden sm:block text-xs text-[#B09A88] line-clamp-1 max-w-[140px]">
+                          {resource.note}
                         </span>
-                        <span className="flex-1 text-sm font-medium text-[#2D1F0E] line-clamp-1">
-                          {resource.title}
-                        </span>
-                        {resource.note && (
-                          <span className="hidden sm:block text-xs text-[#B09A88] line-clamp-1 max-w-[140px]">
-                            {resource.note}
-                          </span>
-                        )}
-                        <Play
-                          size={14}
-                          className="flex-shrink-0 text-[#C0392B] fill-[#C0392B] ml-1"
-                        />
-                      </button>
-                    ) : (
-                      <a
-                        href={resource.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="resource-link flex items-center gap-3 px-4 py-3 bg-[#F7F2EB] rounded-xl border border-[#E8E1D6] hover:border-[#C07A4A]/40"
-                      >
-                        <span
-                          className="flex-shrink-0 text-xs font-bold px-2.5 py-1 rounded-lg"
-                          style={{ backgroundColor: meta.bg, color: meta.color }}
-                        >
-                          {meta.label.toUpperCase()}
-                        </span>
-                        <span className="flex-1 text-sm font-medium text-[#2D1F0E] line-clamp-1">
-                          {resource.title}
-                        </span>
-                        {resource.price && (
-                          <span className="text-xs font-semibold text-[#C07A4A] flex-shrink-0">
-                            {resource.price}
-                          </span>
-                        )}
-                        {resource.note && (
-                          <span className="hidden sm:block text-xs text-[#B09A88] line-clamp-1 max-w-[120px]">
-                            {resource.note}
-                          </span>
-                        )}
-                        <ExternalLink
-                          size={13}
-                          className="flex-shrink-0 text-[#B09A88] group-hover:text-[#8A7060] transition-colors"
-                        />
-                      </a>
-                    )}
+                      )}
+                      <Play
+                        size={14}
+                        className="flex-shrink-0 text-[#C0392B] fill-[#C0392B] ml-1"
+                      />
+                    </button>
                   </div>
                 );
               })}
